@@ -71,6 +71,8 @@ public class Enemy : MonoBehaviour
             animator.SetBool("Die", true);
             pathFinder.speed = 0;
             //»ç¸Á effect
+
+            Destroy(myRigidBody);
             Destroy(this.gameObject,3);
         }
         else

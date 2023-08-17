@@ -27,12 +27,11 @@ public class Player : MonoBehaviour
         enableShoot = true;
         moveCount = 1;
         moveSpeed=GameManager.instance.moveSpeed;
+        myRigidbody = GetComponent<Rigidbody>();
         WeaponSelect(selectedWeaponNum);
         //swordAttackEffect.SetActive(false);
         //spearAttackEffect.SetActive(false);
         hp = hpMax;
-
-        myRigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
