@@ -1,21 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
-    float moveSpeed,moveCount;
-    public float limitMove;
+    float moveSpeed,moveCount,hp;
+    public float limitMove,hpMax;
     public bool enableTurn,enableShoot;
     public int selectedWeaponNum=0;
 
     public GameObject[] weapons;
     public GameObject swordAttackEffect, spearAttackEffect;
     public GameObject arrow;
-    public Transform bowFirePoint;
-    Rigidbody myRigidbody;
+    public Transform bowFirePoint,swordAttackPos, spearAttackPos;
+    public Rigidbody myRigidbody;
 
     Camera viewCamera;
+
+    public Animator animator;
 
     private void Start()
     {
@@ -24,10 +27,12 @@ public class Player : MonoBehaviour
         enableShoot = true;
         moveCount = 1;
         moveSpeed=GameManager.instance.moveSpeed;
-        myRigidbody = GetComponent<Rigidbody>();
         WeaponSelect(selectedWeaponNum);
-        swordAttackEffect.SetActive(false);
-        spearAttackEffect.SetActive(false);
+        //swordAttackEffect.SetActive(false);
+        //spearAttackEffect.SetActive(false);
+        hp = hpMax;
+
+        myRigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()
@@ -63,27 +68,43 @@ public class Player : MonoBehaviour
         
         if(Input.GetMouseButtonDown(0)&&enableShoot)
         {
-            switch(selectedWeaponNum)
+            if(!EventSystem.current.IsPointerOverGameObject())
             {
-                case 0:
-                    GameObject Arrow = Instantiate(arrow, bowFirePoint.position, bowFirePoint.rotation) as GameObject;
-                    Destroy(Arrow.gameObject, 10);
-                    break;
-                case 1:
-                    spearAttackEffect.gameObject.SetActive(true);
-                    break;
-                case 2:
-                    swordAttackEffect.gameObject.SetActive(true);
-                    break;
+                switch (selectedWeaponNum)
+                {
+                    case 0:
+                        GameObject Arrow = Instantiate(arrow, bowFirePoint.position, bowFirePoint.rotation) as GameObject;
+                        Destroy(Arrow.gameObject, 10);
+                        break;
+                    case 1:
+                        //spearAttackEffect.gameObject.SetActive(true);
+                        //StartCoroutine(WaitAndHide(spearAttackEffect));
+                        GameObject SpearAttackEffect = Instantiate(spearAttackEffect, spearAttackPos.position, spearAttackPos.rotation) as GameObject;
+                        Destroy(SpearAttackEffect, 0.5f);
+                        break;
+                    case 2:
+                        //swordAttackEffect.gameObject.SetActive(true);
+                        //StartCoroutine(WaitAndHide(swordAttackEffect));
+                        GameObject SwordAttackEffect = Instantiate(swordAttackEffect, swordAttackPos.position, swordAttackPos.rotation) as GameObject;
+                        Destroy(SwordAttackEffect, 0.5f);
+                        break;
+                }
             }
+            
             
         }
 
-
     }
-
-    void WeaponSelect(int num)
+    /*
+    IEnumerator WaitAndHide(GameObject name)
     {
+        yield return new WaitForSeconds(0.5f);
+        name.SetActive(false);
+    }
+    */
+    public void WeaponSelect(int num)
+    {
+        selectedWeaponNum = num;
         for (int i = 0; i < weapons.Length; i++)
         {
             if(i!=num)
@@ -94,6 +115,18 @@ public class Player : MonoBehaviour
             {
                 weapons[i].SetActive(true);
             }
+        }
+    }
+
+    public void ComputeDamage(float dmg)
+    {
+        //animator.SetTrigger("Damage");
+        hp -= dmg;
+        
+        if (hp <= 0)
+        {
+            //»ç¸Á µ¿ÀÛ
+            animator.SetBool("Die", true);
         }
     }
 }
