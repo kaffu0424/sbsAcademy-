@@ -136,10 +136,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd1b1cbf5fbb9f49a78acd2547ba974, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dieEffect: {fileID: 7190821039199200317, guid: b473bfce0913e864bb8883548ec3d963, type: 3}
+  coinEffect: {fileID: 4043456251226763422, guid: 6b931aa89d626a14aa5fec44d4624ac0, type: 3}
   animator: {fileID: 1220367182773409702}
   refreshRate: 0.5
   hp: 10
   attackPower: 1
+  dropExp: 10
+  minDropCoin: 0
+  maxDropCoin: 5
+  alive: 1
 --- !u!54 &1220367183318941171
 Rigidbody:
   m_ObjectHideFlags: 0

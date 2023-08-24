@@ -32,7 +32,7 @@ public class Arrow : MonoBehaviour
             GameObject HitEffect = Instantiate(hitEnemyEffect, transform.position, Quaternion.identity) as GameObject;
             Destroy(HitEffect, 2);
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.ComputeDamage(attackPower);            
+            enemy.ComputeDamage(attackPower);       
         }
         else
         {

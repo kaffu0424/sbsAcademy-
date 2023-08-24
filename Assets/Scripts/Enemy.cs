@@ -8,11 +8,13 @@ public class Enemy : MonoBehaviour
     NavMeshAgent pathFinder;
     Transform target;
     Rigidbody myRigidBody;
-
+    public GameObject dieEffect,coinEffect;
     public Animator animator;
     public float refreshRate = .25f;
-    public float hp;
-    public float attackPower;
+    public float hp, attackPower;
+    public int dropExp,minDropCoin,maxDropCoin;
+    public bool alive=true;
+
     Player player;
 
     void Start()
@@ -61,25 +63,39 @@ public class Enemy : MonoBehaviour
 
     public void ComputeDamage(float dmg)
     {
-        animator.SetTrigger("Damage");
-        hp -= dmg;
-        //print(pathFinder.speed);       
-
-        if(hp<=0)
+        if(alive)
         {
-            //ªÁ∏¡ µø¿€
-            animator.SetBool("Die", true);
-            pathFinder.speed = 0;
-            //ªÁ∏¡ effect
+            animator.SetTrigger("Damage");
+            hp -= dmg;
+            //print(pathFinder.speed);       
 
-            Destroy(myRigidBody);
-            Destroy(this.gameObject,3);
+            if (hp <= 0)
+            {
+                alive = false;
+                //Debug.Log("¿˚ ªÁ∏¡");
+                GameManager.instance.GetExp(dropExp);
+                int randomCoin = Random.Range(minDropCoin, maxDropCoin);
+                GameManager.instance.UpdateCoin(randomCoin);
+                if(randomCoin>0)
+                {
+                    GameObject CoinEffect = Instantiate(coinEffect, transform.position,Quaternion.identity)as GameObject;
+                    Destroy(CoinEffect, 1);
+                }
+                //ªÁ∏¡ µø¿€
+                animator.SetBool("Die", true);
+                pathFinder.speed = 0;
+                //ªÁ∏¡ effect
+                GameObject DieEffect = Instantiate(dieEffect, transform.position, Quaternion.identity) as GameObject;
+                Destroy(DieEffect, 1.5f);
+                Destroy(myRigidBody);
+                Destroy(this.gameObject, 3);
+            }
+            else
+            {
+                StartCoroutine(NockBack(pathFinder.speed));
+            }
         }
-        else
-        {
-            StartCoroutine(NockBack(pathFinder.speed));
-        }
-        
+               
     }
 
     IEnumerator NockBack(float originalSpeed)
