@@ -5,12 +5,19 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    public Transform[] spawnPoint;
+    //public Transform[] spawnPoint;
 
     public float timeBetweenWaves = 5;
     float countDown = 3;
     public int waveIndexMax;
     int waveIndex = 0;
+
+    MapGenerator map;
+
+    private void Start()
+    {
+        map = FindObjectOfType<MapGenerator>();
+    }
 
     private void Update()
     {
@@ -29,17 +36,22 @@ public class SpawnManager : MonoBehaviour
         {
             for (int i = 0; i < waveIndex; i++)
             {
-                int randomResult = Random.Range(0, spawnPoint.Length);
-                SpawnEnemy(randomResult);
+                //int randomResult = Random.Range(0, spawnPoint.Length);
+                //SpawnEnemy(randomResult);
+                SpawnEnemy();
                 yield return new WaitForSeconds(0.5f);
             }
         }
         
     }
 
-    void SpawnEnemy(int num)
+    //void SpawnEnemy(int num)
+    void SpawnEnemy()
     {
-        Instantiate(enemyPrefab, spawnPoint[num].position, spawnPoint[num].rotation);
+        Transform spawnTile = map.GetRandomOpenTile();
+        //Debug.Log(map.GetRandomOpenTile());
+        //Instantiate(enemyPrefab, spawnPoint[num].position, spawnPoint[num].rotation);
+        Instantiate(enemyPrefab, spawnTile.position, spawnTile.rotation);
     }
    
 }

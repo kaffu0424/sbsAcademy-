@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class GameManager : MonoBehaviour
@@ -11,6 +12,8 @@ public class GameManager : MonoBehaviour
     public float moveSpeed;
     public int exp,lv,lvMax,coin;
     public int[] expMax;
+
+    public GameObject pauseUI;
 
     public Slider expBar,hpBar;
     public TextMeshProUGUI lvText,coinText;
@@ -28,6 +31,7 @@ public class GameManager : MonoBehaviour
         GetExp(0);
         UpdateLv();
         UpdateCoin(PlayerPrefs.GetInt("COIN",0));
+        pauseUI.SetActive(false);
     }
 
     public void GetExp(int num)
@@ -72,4 +76,26 @@ public class GameManager : MonoBehaviour
         UpdateCoin(0);
     }
 
+    public void OnClickPause()
+    {
+        pauseUI.SetActive(true);
+        Time.timeScale = 0;
+    }
+
+    public void OnClickContinue()
+    {
+        Time.timeScale = 1;
+        pauseUI.SetActive(false);
+    }
+
+    public void OnClickHome()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("01_main");
+    }
+
+    public void OnClickQuit()
+    {
+        Application.Quit();
+    }
 }

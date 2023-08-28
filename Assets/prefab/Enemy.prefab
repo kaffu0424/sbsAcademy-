@@ -142,6 +142,7 @@ MonoBehaviour:
   refreshRate: 0.5
   hp: 10
   attackPower: 1
+  pathFindingSpeed: 2
   dropExp: 10
   minDropCoin: 0
   maxDropCoin: 5

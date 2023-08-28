@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     public GameObject dieEffect,coinEffect;
     public Animator animator;
     public float refreshRate = .25f;
-    public float hp, attackPower;
+    public float hp, attackPower,pathFindingSpeed;
     public int dropExp,minDropCoin,maxDropCoin;
     public bool alive=true;
 
@@ -24,6 +24,8 @@ public class Enemy : MonoBehaviour
         target = GameObject.FindGameObjectWithTag("Player").transform;
 
         StartCoroutine(UpdatePath());
+        //print(pathFinder.speed);
+        pathFinder.speed = pathFindingSpeed;
     }
 
     IEnumerator UpdatePath()
@@ -31,6 +33,7 @@ public class Enemy : MonoBehaviour
         while(target!=null && hp>0)
         {
             Vector3 targetPosition = new Vector3(target.position.x, 0, target.position.z);
+            
             if(targetPosition!=transform.position)
             {
                 animator.SetBool("Walk", true);
@@ -41,7 +44,7 @@ public class Enemy : MonoBehaviour
                 animator.SetBool("Walk", false);
                 animator.SetBool("Idle", true);
             }
-
+            
             float distance = Vector3.Distance(targetPosition, transform.position);
             if(distance<3)
             {
@@ -92,7 +95,7 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                StartCoroutine(NockBack(pathFinder.speed));
+                //StartCoroutine(NockBack(pathFinder.speed));
             }
         }
                
