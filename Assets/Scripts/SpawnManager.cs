@@ -5,11 +5,10 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    //public Transform[] spawnPoint;
 
     public float timeBetweenWaves = 5;
     float countDown = 3;
-    public int waveIndexMax;
+    int waveIndexMax;
     int waveIndex = 0;
 
     MapGenerator map;
@@ -23,8 +22,12 @@ public class SpawnManager : MonoBehaviour
     {
         if(countDown<=0)
         {
-            StartCoroutine(SpawnWave());
-            countDown = timeBetweenWaves;
+            if(!GameObject.FindGameObjectWithTag("Enemy"))
+            {
+                StartCoroutine(SpawnWave());
+                countDown = timeBetweenWaves;
+            }
+            
         }
         countDown -= Time.deltaTime;
     }
@@ -32,26 +35,40 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnWave()
     {
         waveIndex++;
-        if(waveIndex<waveIndexMax)
+        waveIndexMax = map.maps[map.mapIndex].waveMax;
+        enemyPrefab = map.maps[map.mapIndex].enemy;
+
+        if (waveIndex<waveIndexMax)
         {
             for (int i = 0; i < waveIndex; i++)
             {
-                //int randomResult = Random.Range(0, spawnPoint.Length);
-                //SpawnEnemy(randomResult);
                 SpawnEnemy();
                 yield return new WaitForSeconds(0.5f);
             }
         }
+        else
+        {
+            StartCoroutine(WaitAndClear());        
+        }
         
     }
 
-    //void SpawnEnemy(int num)
+    IEnumerator WaitAndClear()
+    {
+        yield return new WaitForSeconds(1);
+        GameManager.instance.StageClear();
+    }
+
     void SpawnEnemy()
     {
-        Transform spawnTile = map.GetRandomOpenTile();
-        //Debug.Log(map.GetRandomOpenTile());
-        //Instantiate(enemyPrefab, spawnPoint[num].position, spawnPoint[num].rotation);
+        Transform spawnTile = map.GetRandomOpenTile();          
         Instantiate(enemyPrefab, spawnTile.position, spawnTile.rotation);
+        enemyPrefab.GetComponent<Enemy>().lv = map.mapIndex+1;  //맵(스테이지) 번호에 따라 적의 레벨이 변화하도록 설정
     }
-   
+
+    public void Reset()
+    {
+        waveIndex = 0;
+    }
+
 }

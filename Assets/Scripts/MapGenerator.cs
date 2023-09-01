@@ -187,7 +187,7 @@ public class MapGenerator : MonoBehaviour
         return randomCoord;
     }
     public Transform GetRandomOpenTile()
-    { //�������� ���� Ÿ�� ��������
+    { 
         Coord randomCoord = shuffledOpenTileCoords.Dequeue();
         shuffledOpenTileCoords.Enqueue(randomCoord);
         return tileMap[randomCoord.x, randomCoord.y];
@@ -228,6 +228,8 @@ public class MapGenerator : MonoBehaviour
             public float maxObstacleHeight;
             public Color foregroundColour;
             public Color backgroundColour;
+            public GameObject enemy;
+            public int waveMax;
 
             public Coord mapCentre
             {

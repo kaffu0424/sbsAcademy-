@@ -24,7 +24,7 @@ public class Arrow : MonoBehaviour
     {
         speed = 0;
         ArrowPoint = other.gameObject.transform.Find("Skeleton@Skin/Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Spine1/arrowPoint").transform;
-        print(ArrowPoint.position);
+        //print(ArrowPoint.position);
         transform.SetParent(ArrowPoint);
 
         if (other.gameObject.CompareTag("Enemy"))

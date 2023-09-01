@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bda36e829a6f1d44a0ad9bbbb25d20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackPower: 1
+  attackPower: 2
   hitEnemyEffect: {fileID: 7791018072791288563, guid: b3bf5ca175542c14d98df043be413353, type: 3}
   hitEffect: {fileID: 475613692633862002, guid: 68dcf2fb2abc2b54aa74d4045b470000, type: 3}
 --- !u!1 &2569642571423565583

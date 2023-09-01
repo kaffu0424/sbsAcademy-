@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public float refreshRate = .25f;
     public float hp, attackPower,pathFindingSpeed;
     public int dropExp,minDropCoin,maxDropCoin;
+    public int lv = 1;
     public bool alive=true;
 
     Player player;
@@ -22,6 +23,14 @@ public class Enemy : MonoBehaviour
         pathFinder = GetComponent<NavMeshAgent>();
         myRigidBody = GetComponent<Rigidbody>();
         target = GameObject.FindGameObjectWithTag("Player").transform;
+
+        //레벨에 따라 자동으로 변화하는 수치 처리
+        hp *= ((hp / 100 * lv) + 1);
+        attackPower *= ((attackPower / 100 * lv) + 1);
+        dropExp *= ((dropExp / 100 * lv) + 1);
+        minDropCoin *= ((minDropCoin / 100 * lv) + 1);
+        maxDropCoin *= ((maxDropCoin / 100 * lv) + 1);
+
 
         StartCoroutine(UpdatePath());
         //print(pathFinder.speed);
@@ -50,7 +59,7 @@ public class Enemy : MonoBehaviour
             {
                 animator.SetTrigger("Attack");
                 player = target.GetComponent<Player>();
-                StartCoroutine(WaitAndAttack(player));
+                //StartCoroutine(WaitAndAttack(player));
             }
 
             pathFinder.SetDestination(targetPosition);
@@ -62,6 +71,21 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(1.02f);
         player.ComputeDamage(attackPower);
+    }
+
+    public void DoAttack()
+    {
+        if((target != null && hp > 0))
+        {
+            Vector3 targetPosition = new Vector3(target.position.x, 0, target.position.z);
+            float distance = Vector3.Distance(targetPosition, transform.position);
+            if(distance<3)
+            {
+
+                player.ComputeDamage(attackPower);
+            }            
+        }
+        
     }
 
     public void ComputeDamage(float dmg)

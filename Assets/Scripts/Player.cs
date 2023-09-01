@@ -11,18 +11,19 @@ public class Player : MonoBehaviour
     public int selectedWeaponNum=0;    
 
     public GameObject[] weapons;
-    public GameObject swordAttackEffect, spearAttackEffect, body;
+    public GameObject swordAttackEffect, spearAttackEffect, hitEffect,body;
     public GameObject arrow;
     public GameObject dmgImage;
     public Transform bowFirePoint,swordAttackPos, spearAttackPos;
     Rigidbody myRigidbody;
-
     Camera viewCamera;
+    MapGenerator map;
 
     public Animator animator;
 
     private void Start()
     {
+        map = GameObject.Find("MapGenerator").GetComponent<MapGenerator>();
         viewCamera = Camera.main;
         enableTurn = true;
         enableShoot = true;
@@ -33,7 +34,7 @@ public class Player : MonoBehaviour
         //swordAttackEffect.SetActive(false);
         //spearAttackEffect.SetActive(false);
         animator.SetBool("Idle", true);
-        hp = hpMax;
+        RecoverHP();
         GameManager.instance.UpdateHP(hp, hpMax);
         dmgImage.SetActive(false);
     }
@@ -120,12 +121,14 @@ public class Player : MonoBehaviour
     public void BowAttack()
     {
         GameObject Arrow = Instantiate(arrow, bowFirePoint.position, bowFirePoint.rotation) as GameObject;
+        Arrow.GetComponent<Arrow>().attackPower += GameManager.instance.attackPower[GameManager.instance.lv];
         Destroy(Arrow.gameObject, 10);
     }
 
     public void SwordAttack()
     {
         GameObject SwordAttackEffect = Instantiate(swordAttackEffect, swordAttackPos.position, swordAttackPos.rotation) as GameObject;
+        SwordAttackEffect.GetComponent<AttackCheck>().attackPower += GameManager.instance.attackPower[GameManager.instance.lv];
         SwordAttackEffect.transform.SetParent(swordAttackPos);
         Destroy(SwordAttackEffect, 0.5f);
     }
@@ -133,6 +136,7 @@ public class Player : MonoBehaviour
     public void SpearAttack()
     {
         GameObject SpearAttackEffect = Instantiate(spearAttackEffect, spearAttackPos.position, spearAttackPos.rotation) as GameObject;
+        SpearAttackEffect.GetComponent<AttackCheck>().attackPower += GameManager.instance.attackPower[GameManager.instance.lv];
         SpearAttackEffect.transform.SetParent(spearAttackPos);
         Destroy(SpearAttackEffect, 0.5f);
     }
@@ -175,7 +179,11 @@ public class Player : MonoBehaviour
 
     public void ComputeDamage(float dmg)
     {
+        GameObject HitEffect = Instantiate(hitEffect, transform.position, Quaternion.identity) as GameObject;
+        Destroy(HitEffect, 1.4f);
         //animator.SetTrigger("Damage");
+        animator.Play("hit");
+
         dmgImage.SetActive(true);
         StartCoroutine(WaitAndHideImg());
 
@@ -185,8 +193,12 @@ public class Player : MonoBehaviour
         {
             //ªÁ∏¡ µø¿€
             //animator.SetBool("Die", true);
-            GameObject Body=Instantiate(body, transform.position, Quaternion.identity)as GameObject;
-            Body.GetComponent<Body>().coin = GameManager.instance.coin;
+
+            GameManager.instance.SaveBody(map.mapIndex, map.maps[map.mapIndex].seed, GameManager.instance.coin, transform.position);
+
+            //GameObject Body=Instantiate(body, transform.position, Quaternion.identity)as GameObject;
+            //Body.GetComponent<Body>().coin = GameManager.instance.coin;
+
             Reset();
         }
 
@@ -199,11 +211,22 @@ public class Player : MonoBehaviour
         dmgImage.SetActive(false);
     }
 
-    private void Reset()
+    public void Reset()
     {
-        transform.position = new Vector3(0, 0, 0);
-        GameManager.instance.Reset();
+        GameManager.instance.Reset();        
+        map.mapIndex = 0;
+        ResetForNextStage();
+    }
+
+    public void ResetForNextStage()
+    {
+        transform.position = new Vector3(0, 6.5f, 0);
         hp = hpMax;
         GameManager.instance.UpdateHP(hp, hpMax);
+    }
+
+    public void RecoverHP()
+    {
+        hp = hpMax;
     }
 }

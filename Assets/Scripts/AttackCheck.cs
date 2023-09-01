@@ -13,10 +13,14 @@ public class AttackCheck : MonoBehaviour
 
         if (other.gameObject.CompareTag("Enemy"))
         {
-            GameObject HitEffect = Instantiate(hitEnemyEffect, transform.position, Quaternion.identity) as GameObject;
-            Destroy(HitEffect, 2);
-            Enemy enemy = other.GetComponent<Enemy>();
-            enemy.ComputeDamage(attackPower);
+            if(other.GetComponent<Enemy>().alive==true)
+            {
+                GameObject HitEffect = Instantiate(hitEnemyEffect, transform.position, Quaternion.identity) as GameObject;
+                Destroy(HitEffect, 2);
+                Enemy enemy = other.GetComponent<Enemy>();
+                enemy.ComputeDamage(attackPower);
+            }
+
         }
 
     }

@@ -158,6 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  attackPower: 3
+  attackPower: 1
   hitEffect: {fileID: 475613692633862002, guid: 68dcf2fb2abc2b54aa74d4045b470000, type: 3}
   hitEnemyEffect: {fileID: 7791018072791288563, guid: b3bf5ca175542c14d98df043be413353, type: 3}
+  ArrowPoint: {fileID: 0}
