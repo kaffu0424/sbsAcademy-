@@ -57,6 +57,7 @@ public class Enemy : MonoBehaviour
             float distance = Vector3.Distance(targetPosition, transform.position);
             if(distance<3)
             {
+                pathFinder.speed = 0;
                 animator.SetTrigger("Attack");
                 player = target.GetComponent<Player>();
                 //StartCoroutine(WaitAndAttack(player));
@@ -83,7 +84,9 @@ public class Enemy : MonoBehaviour
             {
 
                 player.ComputeDamage(attackPower);
-            }            
+            }
+            //pathFinder.enabled = true;
+            pathFinder.speed = 3.5f;
         }
         
     }
@@ -92,6 +95,7 @@ public class Enemy : MonoBehaviour
     {
         if(alive)
         {
+            pathFinder.speed = 0;
             animator.SetTrigger("Damage");
             hp -= dmg;
             //print(pathFinder.speed);       
@@ -121,8 +125,15 @@ public class Enemy : MonoBehaviour
             {
                 //StartCoroutine(NockBack(pathFinder.speed));
             }
+            StartCoroutine(WaitAndResume());
         }
                
+    }
+
+    IEnumerator WaitAndResume()
+    {
+        yield return new WaitForSeconds(0.4f);
+        pathFinder.speed = 3.5f;
     }
 
     IEnumerator NockBack(float originalSpeed)

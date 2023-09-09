@@ -110,6 +110,19 @@ public class Player : MonoBehaviour
             
         }
 
+        if(Input.GetKeyUp(KeyCode.Alpha1))
+        {
+            WeaponSelect(0);
+        }
+        else if(Input.GetKeyUp(KeyCode.Alpha2))
+        {
+            WeaponSelect(1);
+        }
+        else if(Input.GetKeyUp(KeyCode.Alpha3))
+        {
+            WeaponSelect(2);
+        }
+
     }
     /*
     IEnumerator WaitAndHide(GameObject name)

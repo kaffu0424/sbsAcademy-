@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour
     public int[] hpMax;
     public int[] attackPower;
 
+    public float attackPowerTime;
+    float currentAttackPowerTime=0;
+    int originalAttackPower;
+
     public GameObject pauseUI,gameOverUI,stageClearUI;
     public GameObject rewardBoxClose, rewardBoxOpen;
 
@@ -40,6 +44,7 @@ public class GameManager : MonoBehaviour
     {
         mapG = GameObject.Find("MapGenerator").GetComponent<MapGenerator>();
         currentStageNumber = mapG.mapIndex;
+        originalAttackPower = attackPower[lv];
 
         LoadBodyData();
         exp = PlayerPrefs.GetInt("EXP",0);    //저장된 경험치 값 가져 오기
@@ -52,6 +57,18 @@ public class GameManager : MonoBehaviour
         stageClearUI.SetActive(false);
         rewardBoxClose.SetActive(false);
         rewardBoxOpen.SetActive(false);        
+    }
+
+    private void Update()
+    {
+        if(currentAttackPowerTime>0)
+        {
+            currentAttackPowerTime -= Time.deltaTime;
+        }
+        else
+        {
+            attackPower[lv] = originalAttackPower;
+        }
     }
 
     public void SaveBody(int index,int seed, int coin, Vector3 point)
@@ -184,6 +201,13 @@ public class GameManager : MonoBehaviour
         rewardBoxClose.SetActive(true);
         rewardBoxOpen.SetActive(false);
         stageClearUI.SetActive(true);
+    }
+
+    public void OnClickSkill01()
+    {
+        originalAttackPower = attackPower[lv];
+        attackPower[lv] *= 2;
+        currentAttackPowerTime = attackPowerTime;
     }
 
 }

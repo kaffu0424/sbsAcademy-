@@ -22,23 +22,32 @@ public class Arrow : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        speed = 0;
-        ArrowPoint = other.gameObject.transform.Find("Skeleton@Skin/Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Spine1/arrowPoint").transform;
-        //print(ArrowPoint.position);
-        transform.SetParent(ArrowPoint);
+        //print(other.gameObject.name);
+        
 
         if (other.gameObject.CompareTag("Enemy"))
-        {            
+        {
+            ArrowPoint = other.gameObject.transform.Find("Skeleton@Skin/Bip001/Bip001 Pelvis/Bip001 Spine/Bip001 Spine1/arrowPoint").transform;
+            //print(ArrowPoint.position);
+            transform.position = ArrowPoint.position;
+            transform.SetParent(ArrowPoint);
+
+            //print("Àû ¸íÁß");
+
             GameObject HitEffect = Instantiate(hitEnemyEffect, transform.position, Quaternion.identity) as GameObject;
             Destroy(HitEffect, 2);
             Enemy enemy = other.GetComponent<Enemy>();
             enemy.ComputeDamage(attackPower);       
         }
+
         else
-        {
+        {            
             GameObject HitEffect = Instantiate(hitEffect, transform.position, Quaternion.identity) as GameObject;
             Destroy(HitEffect, 2);
         }
+
+        GetComponent<SphereCollider>().enabled = false;
+        speed = 0;
 
     }
 }
